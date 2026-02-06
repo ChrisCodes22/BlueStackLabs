@@ -12,7 +12,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Contact Form Handling
+// Contact Form Handling with Formspree
 const contactForm = document.getElementById('contact-form');
 const formStatus = document.getElementById('form-status');
 
@@ -20,35 +20,34 @@ if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Get form data
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            subject: document.getElementById('subject').value,
-            message: document.getElementById('message').value
-        };
-        
-        // Show loading state
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
+        // Get the form action URL (should be set to your Formspree endpoint)
+        const formAction = contactForm.getAttribute('action');
+        
+        if (!formAction || formAction === 'https://formspree.io/f/YOUR_FORM_ID') {
+            formStatus.textContent = 'Please contact us directly at bslsoftware1@gmail.com';
+            formStatus.className = 'form-status success';
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        const formData = new FormData(contactForm);
+        
         try {
-            // Using Formspree for form handling
-            // You'll need to replace 'YOUR_FORM_ID' with your actual Formspree form ID
-            // Sign up at https://formspree.io/ and create a form to get your ID
-            
-            const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+            const response = await fetch(formAction, {
                 method: 'POST',
+                body: formData,
                 headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+                    'Accept': 'application/json'
+                }
             });
             
             if (response.ok) {
-                // Success
                 formStatus.textContent = 'Thank you! Your message has been sent successfully. We\'ll get back to you soon.';
                 formStatus.className = 'form-status success';
                 contactForm.reset();
@@ -56,8 +55,7 @@ if (contactForm) {
                 throw new Error('Form submission failed');
             }
         } catch (error) {
-            // For now, since we don't have Formspree set up, just show a message
-            formStatus.textContent = 'Thanks for your interest! Please email us directly at info@bluestacklabs.com';
+            formStatus.textContent = 'Thanks for your interest! Please email us directly at bslsoftware1@gmail.com';
             formStatus.className = 'form-status success';
             contactForm.reset();
         } finally {
