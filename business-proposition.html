@@ -38,7 +38,6 @@
     justify-content: center;
     padding: 80px;
     position: relative;
-    overflow: hidden;
   }
 
   .cover::before {
@@ -672,12 +671,51 @@
   }
 
   @media (max-width: 768px) {
-    .cover { padding: 48px 28px; }
-    .cover-meta { flex-wrap: wrap; gap: 24px; }
-    .section { padding: 60px 24px; }
+    /* General layout */
+    .cover { padding: 40px 24px; min-height: auto; }
+    .cover-meta { flex-wrap: wrap; gap: 20px; }
+    .cover h1 { font-size: 36px; }
+    .section { padding: 48px 20px; }
+    .closing { padding: 48px 24px; }
+    .idle-visual { padding: 28px 20px; }
+
+    /* Stack all two-column grids */
     .compare { grid-template-columns: 1fr; }
-    .closing { padding: 60px 28px; }
-    .idle-visual { padding: 32px 24px; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .impl-grid { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+
+    /* Pricing cards - stack vertically */
+    .pricing-grid { grid-template-columns: 1fr !important; }
+
+    /* Dual dept callout - stack */
+    .dept-grid { grid-template-columns: 1fr !important; }
+    .dept-grid > div:last-child {
+      border-left: none !important;
+      padding-left: 0 !important;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 32px !important;
+      margin-top: 8px;
+    }
+
+    /* Cost callout - stack */
+    .cost-callout { flex-direction: column !important; text-align: center; }
+
+    /* ROI calculator inputs */
+    .calc-inputs { grid-template-columns: 1fr 1fr; }
+    .calc-results { grid-template-columns: 1fr 1fr; }
+
+    /* Closing contact */
+    .closing-contact { flex-wrap: wrap; gap: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .stat-row { grid-template-columns: 1fr; }
+    .calc-inputs { grid-template-columns: 1fr; }
+    .calc-results { grid-template-columns: 1fr 1fr; }
+    .cover h1 { font-size: 28px; }
+    .section h2 { font-size: 26px !important; }
   }
 
   @media print {
@@ -821,7 +859,7 @@
   <!-- Dual department callout -->
   <div style="background: linear-gradient(135deg, #0a1628, #1a2a45); border-radius: 20px; padding: 48px; margin-top: 16px; position: relative; overflow: hidden;">
     <div style="position:absolute; top:-80px; right:-80px; width:300px; height:300px; border-radius:50%; background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);"></div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; position: relative;">
+    <div class="dept-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; position: relative;">
 
       <div>
         <div style="font-family:'DM Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color: #f5a623; margin-bottom:14px;">Primary Impact</div>
@@ -1015,7 +1053,7 @@
   <h2>Simple, <em>Transparent</em> Pricing</h2>
   <p class="lead">Two straightforward options — no hidden fees, no per-seat charges, no infrastructure costs. The Professional plan is recommended for production teams and covers both departments.</p>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 40px 0;">
+  <div class="pricing-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 40px 0;">
 
     <!-- Monthly -->
     <div style="background: white; border-radius: 20px; padding: 44px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 2px solid var(--mid); position: relative;">
@@ -1053,7 +1091,7 @@
   </div>
 
   <!-- Cost per tech callout -->
-  <div style="background:white; border-radius:16px; padding:36px 40px; box-shadow:0 2px 16px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px; border-left: 5px solid var(--green);">
+  <div class="cost-callout" style="background:white; border-radius:16px; padding:36px 40px; box-shadow:0 2px 16px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px; border-left: 5px solid var(--green);">
     <div>
       <div style="font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px;">Put It In Perspective</div>
       <div style="font-family:'DM Serif Display',serif; font-size:28px; color:var(--navy);">$100 per technician per year</div>
