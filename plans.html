@@ -399,14 +399,84 @@
             </div>
         </section>
 
-        <!-- CTA -->
+        <!-- Hidden form for Netlify detection -->
+        <form name="plans-inquiry" netlify netlify-honeypot="bot-field" hidden>
+            <input type="text" name="name">
+            <input type="email" name="email">
+            <input type="tel" name="phone">
+            <input type="text" name="plan">
+            <textarea name="message"></textarea>
+            <input type="text" name="bot-field">
+        </form>
+
+        <!-- CTA / CONTACT -->
         <section class="cta-section" id="contact">
             <div class="cta-box reveal">
                 <h2>Ready to Get Started?</h2>
                 <p>Tell me about your business and I'll recommend the right plan. First consultation is free — no pressure, no obligation.</p>
-                <div class="cta-buttons">
-                    <a href="mailto:info@bluestacklabs.software?subject=Website%20Inquiry" class="btn btn-primary">Email Blue Stack Labs</a>
-                    <a href="index.html#work" class="btn btn-secondary">See Our Work</a>
+
+                <div id="inquiry-wrap" style="margin-top:40px; text-align:left;">
+                    <form id="inquiry-form" name="plans-inquiry" method="POST" novalidate
+                          style="display:grid; gap:16px;">
+                        <input type="hidden" name="form-name" value="plans-inquiry">
+                        <p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                            <div>
+                                <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); margin-bottom:8px;">Your Name <span style="color:var(--light-blue)">*</span></label>
+                                <input type="text" id="inq-name" name="name" placeholder="John Smith" required
+                                       style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:var(--text-light); font-family:'Work Sans',sans-serif; font-size:15px; transition:border-color 0.2s; outline:none;">
+                                <p class="err" style="display:none; color:var(--light-blue); font-size:12px; margin-top:5px;">Required</p>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); margin-bottom:8px;">Email <span style="color:var(--light-blue)">*</span></label>
+                                <input type="email" id="inq-email" name="email" placeholder="you@example.com" required
+                                       style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:var(--text-light); font-family:'Work Sans',sans-serif; font-size:15px; transition:border-color 0.2s; outline:none;">
+                                <p class="err" style="display:none; color:var(--light-blue); font-size:12px; margin-top:5px;">Required</p>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                            <div>
+                                <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); margin-bottom:8px;">Phone</label>
+                                <input type="tel" id="inq-phone" name="phone" placeholder="(916) 555-0100"
+                                       style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:var(--text-light); font-family:'Work Sans',sans-serif; font-size:15px; transition:border-color 0.2s; outline:none;">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); margin-bottom:8px;">Interested In</label>
+                                <select id="inq-plan" name="plan"
+                                        style="width:100%; padding:12px 16px; background:rgba(10,14,26,0.95); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:var(--text-light); font-family:'Work Sans',sans-serif; font-size:15px; outline:none; cursor:pointer;">
+                                    <option value="">Select a plan…</option>
+                                    <option value="starter">Starter — $500 build / $75 mo</option>
+                                    <option value="standard">Standard — $1,000 build / $100 mo</option>
+                                    <option value="premium">Premium — $2,500 build / $150 mo</option>
+                                    <option value="addon">Add-on only</option>
+                                    <option value="unsure">Not sure yet</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); margin-bottom:8px;">Tell Me About Your Business <span style="color:var(--light-blue)">*</span></label>
+                            <textarea id="inq-message" name="message" rows="4" placeholder="What kind of business do you run? What do you need the site to do?" required
+                                      style="width:100%; padding:12px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:var(--text-light); font-family:'Work Sans',sans-serif; font-size:15px; resize:vertical; outline:none; transition:border-color 0.2s;"></textarea>
+                            <p class="err" style="display:none; color:var(--light-blue); font-size:12px; margin-top:5px;">Required</p>
+                        </div>
+
+                        <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
+                            <button type="submit" id="inq-submit" class="btn btn-primary" style="min-width:200px;">Send Inquiry</button>
+                            <a href="index.html#work" class="btn btn-secondary">See Our Work</a>
+                        </div>
+                        <p style="color:var(--text-dim); font-size:13px;">We'll get back to you within one business day.</p>
+                    </form>
+                </div>
+
+                <div id="inquiry-confirm" style="display:none; text-align:center; padding:20px 0;">
+                    <div style="width:64px; height:64px; border-radius:50%; background:rgba(0,102,255,0.15); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="var(--light-blue)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    </div>
+                    <h3 style="font-family:'Orbitron',sans-serif; font-size:26px; margin-bottom:12px;">Message Received!</h3>
+                    <p style="color:var(--text-dim); font-size:16px;">Thanks for reaching out. I'll be in touch within one business day at <span id="confirm-email" style="color:var(--light-blue);"></span>.</p>
                 </div>
             </div>
         </section>
@@ -424,17 +494,86 @@
     </div>
 
     <script>
+    // Scroll reveal
     const io = new IntersectionObserver(entries => {
         entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', function(e) {
             const target = document.querySelector(this.getAttribute('href'));
             if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         });
     });
+
+    // Input focus glow
+    document.querySelectorAll('#inquiry-form input, #inquiry-form select, #inquiry-form textarea').forEach(el => {
+        el.addEventListener('focus', () => el.style.borderColor = 'rgba(0,102,255,0.6)');
+        el.addEventListener('blur',  () => el.style.borderColor = 'rgba(255,255,255,0.12)');
+        el.addEventListener('input', () => {
+            if (el.value.trim()) {
+                const err = el.closest('div').querySelector('.err');
+                if (err) { err.style.display = 'none'; el.style.borderColor = 'rgba(255,255,255,0.12)'; }
+            }
+        });
+    });
+
+    // Form submission
+    const inquiryForm = document.getElementById('inquiry-form');
+    if (inquiryForm) {
+        inquiryForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name    = document.getElementById('inq-name');
+            const email   = document.getElementById('inq-email');
+            const message = document.getElementById('inq-message');
+            const btn     = document.getElementById('inq-submit');
+
+            // Validate required fields
+            let valid = true;
+            [name, email, message].forEach(field => {
+                const err = field.closest('div').querySelector('.err');
+                if (!field.value.trim()) {
+                    field.style.borderColor = 'rgba(0,102,255,0.7)';
+                    if (err) err.style.display = 'block';
+                    valid = false;
+                }
+            });
+            if (!valid) return;
+
+            btn.textContent = 'Sending...';
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('form-name', 'plans-inquiry');
+                formData.append('name',    name.value.trim());
+                formData.append('email',   email.value.trim());
+                formData.append('phone',   document.getElementById('inq-phone').value.trim());
+                formData.append('plan',    document.getElementById('inq-plan').value);
+                formData.append('message', message.value.trim());
+                formData.append('bot-field', '');
+
+                const res = await fetch('/', { method: 'POST', body: formData });
+
+                if (res.ok) {
+                    document.getElementById('confirm-email').textContent = email.value.trim();
+                    document.getElementById('inquiry-wrap').style.display = 'none';
+                    document.getElementById('inquiry-confirm').style.display = 'block';
+                } else {
+                    btn.textContent = 'Send Inquiry';
+                    btn.disabled = false;
+                    alert('Something went wrong — please email info@bluestacklabs.software directly.');
+                }
+            } catch (err) {
+                btn.textContent = 'Send Inquiry';
+                btn.disabled = false;
+                alert('Network error — please email info@bluestacklabs.software directly.');
+            }
+        });
+    }
     </script>
 </body>
 </html>
