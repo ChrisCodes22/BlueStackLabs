@@ -21,6 +21,7 @@
                 <li><a href="#services">Services</a></li>
                 <li><a href="#tech">Technology</a></li>
                 <li><a href="#work">Work</a></li>
+                <li><a href="plans.html">Plans</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -52,11 +53,12 @@
                 <p>Focused on delivering practical software solutions using Python, Java, HTML, and CSS</p>
             </div>
             <div class="services-grid">
-                <div class="service-card">
+                <a href="plans.html" class="service-card" style="text-decoration:none; color:inherit; display:block;">
                     <span class="service-icon">🌐</span>
                     <h3>Custom Websites</h3>
                     <p>Professional, responsive websites built with HTML, CSS, and JavaScript. From landing pages to interactive business sites.</p>
-                </div>
+                    <span style="display:inline-block; margin-top:14px; color:var(--light-blue); font-weight:600; font-size:14px;">View Plans &amp; Pricing →</span>
+                </a>
                 <div class="service-card">
                     <span class="service-icon">🧩</span>
                     <h3>Browser Extensions</h3>
@@ -189,7 +191,7 @@
                 <h2>Let's Build Your Solution</h2>
                 <p>Have a project in mind? Let's discuss how we can bring it to life together.</p>
                 
-                <form id="contact-form" class="contact-form" action="https://formspree.io/f/maqdwvak" method="POST">
+                <form id="contact-form" class="contact-form">
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" id="name" name="name" placeholder="Your Name" required>
@@ -207,12 +209,6 @@
                     <button type="submit" class="btn btn-primary">Send Message</button>
                     <div id="form-status" class="form-status"></div>
                 </form>
-                
-                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <p style="color: var(--text-dim); font-size: 14px;">
-                        Or email us directly at: <a href="mailto:info@bluestacklabs.software" style="color: var(--primary-blue); text-decoration: none;">info@bluestacklabs.software</a>
-                    </p>
-                </div>
             </div>
         </section>
 
@@ -225,7 +221,7 @@
                 <div class="footer-column">
                     <h4>Services</h4>
                     <ul>
-                        <li><a href="#services">Custom Websites</a></li>
+                        <li><a href="plans.html">Custom Websites</a></li>
                         <li><a href="#services">Python Solutions</a></li>
                         <li><a href="#services">Java Applications</a></li>
                         <li><a href="#services">Automation Tools</a></li>
@@ -245,4 +241,12 @@
                     </ul>
                 </div>
             </div>
-            <div class="footer
+            <div class="footer-bottom">
+                <p>&copy; 2026 Blue Stack Labs. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
