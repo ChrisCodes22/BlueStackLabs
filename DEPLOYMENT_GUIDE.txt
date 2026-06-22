@@ -1,0 +1,76 @@
+═══════════════════════════════════════════════════════════════
+  BLUE STACK LABS WEBSITE - DEPLOYMENT GUIDE
+═══════════════════════════════════════════════════════════════
+
+🎯 QUICK DEPLOYMENT (Recommended - FREE)
+
+METHOD 1: NETLIFY (Easiest!)
+────────────────────────────────────────────────────────────────
+1. Go to https://www.netlify.com
+2. Sign up (free)
+3. Click "Sites" → "Add new site" → "Deploy manually"
+4. Drag your website folder into the upload area
+5. Done! Your site is live at: https://your-site-name.netlify.app
+
+To add your custom domain (bluestacklabs.com):
+1. In Netlify, go to "Domain settings"
+2. Click "Add custom domain"
+3. Enter: bluestacklabs.com
+4. Follow the instructions to update your DNS settings
+
+METHOD 2: VERCEL (Also Great!)
+────────────────────────────────────────────────────────────────
+1. Go to https://vercel.com
+2. Sign up (free)
+3. Click "Add New" → "Project"
+4. Upload your files or connect GitHub
+5. Click "Deploy"
+
+💰 DOMAIN NAME PURCHASE
+────────────────────────────────────────────────────────────────
+Buy your domain at:
+- Namecheap.com ($10-15/year) - RECOMMENDED
+- GoDaddy.com
+- Google Domains
+- Cloudflare
+
+Search for: bluestacklabs.com
+
+📧 CONTACT FORM SETUP
+────────────────────────────────────────────────────────────────
+Option A: Use Formspree (5 minutes)
+1. Go to https://formspree.io
+2. Sign up (free - 50 submissions/month)
+3. Create a new form
+4. Copy your form ID
+5. Open script.js
+6. Find line 29: 'https://formspree.io/f/YOUR_FORM_ID'
+7. Replace YOUR_FORM_ID with your actual ID
+8. Save and re-upload
+
+Option B: Use Email Link (2 minutes)
+1. Open index.html
+2. Find the contact form (around line 200)
+3. Replace the form with:
+   <a href="mailto:info@bluestacklabs.com" class="btn btn-primary">Email Us</a>
+
+📝 CUSTOMIZATION CHECKLIST
+────────────────────────────────────────────────────────────────
+□ Update email address (search for: info@bluestacklabs.com)
+□ Add social media links in footer
+□ Update company information in "About" section
+□ Add more projects to portfolio if desired
+□ Test contact form
+
+🎨 OPTIONAL: Change Brand Colors
+────────────────────────────────────────────────────────────────
+Open styles.css and edit lines 1-10:
+--primary-blue: #0066FF;    ← Change this
+--deep-blue: #0047AB;       ← And this
+--light-blue: #00A3FF;      ← And this
+
+🆘 NEED HELP?
+────────────────────────────────────────────────────────────────
+Email: info@bluestacklabs.com
+
+═══════════════════════════════════════════════════════════════
