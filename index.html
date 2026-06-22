@@ -21,7 +21,6 @@
                 <li><a href="#services">Services</a></li>
                 <li><a href="#tech">Technology</a></li>
                 <li><a href="#work">Work</a></li>
-                <li><a href="plans.html">Plans</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -53,12 +52,11 @@
                 <p>Focused on delivering practical software solutions using Python, Java, HTML, and CSS</p>
             </div>
             <div class="services-grid">
-                <a href="plans.html" class="service-card" style="text-decoration:none; color:inherit; display:block;">
+                <div class="service-card">
                     <span class="service-icon">🌐</span>
                     <h3>Custom Websites</h3>
                     <p>Professional, responsive websites built with HTML, CSS, and JavaScript. From landing pages to interactive business sites.</p>
-                    <span style="display:inline-block; margin-top:14px; color:var(--light-blue); font-weight:600; font-size:14px;">View Plans &amp; Pricing →</span>
-                </a>
+                </div>
                 <div class="service-card">
                     <span class="service-icon">🧩</span>
                     <h3>Browser Extensions</h3>
@@ -191,7 +189,9 @@
                 <h2>Let's Build Your Solution</h2>
                 <p>Have a project in mind? Let's discuss how we can bring it to life together.</p>
                 
-                <form id="contact-form" class="contact-form">
+                <form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="contact">
+                    <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
                     <div class="form-row">
                         <div class="form-group">
                             <input type="text" id="name" name="name" placeholder="Your Name" required>
@@ -221,7 +221,7 @@
                 <div class="footer-column">
                     <h4>Services</h4>
                     <ul>
-                        <li><a href="plans.html">Custom Websites</a></li>
+                        <li><a href="#services">Custom Websites</a></li>
                         <li><a href="#services">Python Solutions</a></li>
                         <li><a href="#services">Java Applications</a></li>
                         <li><a href="#services">Automation Tools</a></li>
