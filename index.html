@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -38,9 +39,27 @@
                 </div>
                 <div class="hero-visual">
                     <div class="stack-3d">
-                        <div class="layer"></div>
-                        <div class="layer"></div>
-                        <div class="layer"></div>
+                        <div class="layer">
+                            <span class="layer-label">Front End</span>
+<pre class="layer-code"><span class="tok-tag">&lt;header</span> <span class="tok-attr">class</span>=<span class="tok-str">"hero"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;h1&gt;</span>Blue Stack Labs<span class="tok-tag">&lt;/h1&gt;</span>
+  <span class="tok-tag">&lt;button&gt;</span>Start Project<span class="tok-tag">&lt;/button&gt;</span>
+<span class="tok-tag">&lt;/header&gt;</span><span class="code-cursor"></span></pre>
+                        </div>
+                        <div class="layer">
+                            <span class="layer-label">Back End</span>
+<pre class="layer-code"><span class="tok-com">// projects API</span>
+<span class="tok-fn">app</span>.<span class="tok-fn">get</span>(<span class="tok-str">'/api/projects'</span>, (req, res) =&gt; {
+  res.<span class="tok-fn">json</span>(<span class="tok-fn">getProjects</span>())
+})</pre>
+                        </div>
+                        <div class="layer">
+                            <span class="layer-label">Database</span>
+<pre class="layer-code"><span class="tok-com">-- fetch active projects</span>
+<span class="tok-kw">SELECT</span> id, name <span class="tok-kw">FROM</span> projects
+<span class="tok-kw">WHERE</span> status = <span class="tok-str">'active'</span>
+<span class="tok-kw">ORDER BY</span> id <span class="tok-kw">LIMIT</span> <span class="tok-num">10</span>;</pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -258,5 +277,60 @@
     </div>
 
     <script src="script.js"></script>
+
+    <!-- Contact form submission — same approach as the working plans.html form -->
+    <script>
+    const contactForm = document.getElementById('contact-form');
+    const formStatus  = document.getElementById('form-status');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name    = document.getElementById('name');
+            const email   = document.getElementById('email');
+            const subject = document.getElementById('subject');
+            const message = document.getElementById('message');
+
+            // Validate required fields
+            const empty = [name, email, subject, message].some(f => !f.value.trim());
+            if (empty) {
+                formStatus.textContent = 'Please fill in all fields before sending.';
+                formStatus.className = 'form-status error';
+                return;
+            }
+
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('form-name', 'contact');
+                formData.append('name',     name.value.trim());
+                formData.append('email',    email.value.trim());
+                formData.append('subject',  subject.value.trim());
+                formData.append('message',  message.value.trim());
+                formData.append('bot-field', '');
+
+                const res = await fetch('/', { method: 'POST', body: formData });
+
+                if (res.ok) {
+                    contactForm.reset();
+                    formStatus.textContent = 'Thank you! Your message has been sent. We\'ll get back to you within one business day.';
+                    formStatus.className = 'form-status success';
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (err) {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                formStatus.textContent = 'Something went wrong — please email info@bluestacklabs.software directly.';
+                formStatus.className = 'form-status error';
+            }
+        });
+    }
+    </script>
 </body>
 </html>
