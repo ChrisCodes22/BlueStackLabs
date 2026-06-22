@@ -185,11 +185,20 @@
             </div>
         </section>
 
+        <!-- Hidden form for Netlify detection -->
+        <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+            <input type="text" name="name">
+            <input type="email" name="email">
+            <input type="text" name="subject">
+            <textarea name="message"></textarea>
+            <input type="text" name="bot-field">
+        </form>
+
         <section class="cta-section" id="contact">
             <div class="cta-box">
                 <h2>Let's Build Your Solution</h2>
                 <p>Have a project in mind? Let's discuss how we can bring it to life together.</p>
-                
+
                 <form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
                     <input type="hidden" name="form-name" value="contact">
                     <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
