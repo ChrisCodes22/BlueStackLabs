@@ -233,14 +233,17 @@ nav {
 
 /* 3D Stack Visual */
 .hero-visual {
-    perspective: 1200px;
+    /* Single source of truth for the logo's size — everything below scales
+       from this, so the whole 3D stack shrinks responsively with the viewport. */
+    --layer: clamp(150px, 24vw, 300px);
+    perspective: calc(var(--layer) * 4);
     overflow: visible;
 }
 
 .stack-3d {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: calc(var(--layer) * 1.4);
     transform-style: preserve-3d;
     animation: rotate3d 20s infinite linear;
     overflow: visible;
@@ -253,13 +256,19 @@ nav {
 
 .layer {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: var(--layer);
+    height: var(--layer);
     background: linear-gradient(135deg, rgba(0, 102, 255, 0.2), rgba(0, 163, 255, 0.1));
     border: 2px solid rgba(0, 102, 255, 0.3);
     border-radius: 20px;
     backdrop-filter: blur(10px);
     overflow: hidden;
+    /* Center the code on the face; label stays pinned top-left (absolute) */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 6%;
 }
 
 /* Each layer carries its own depth (Z) + diagonal offset inside its
@@ -277,22 +286,24 @@ nav {
     animation: floatLayer3 6s infinite ease-in-out 0.4s;
 }
 
-/* Front layer: closest in depth (+160px), up-and-right */
+/* Offsets are expressed as fractions of --layer so the depth/diagonal
+   separation scales proportionally as the logo resizes. */
+/* Front layer: closest in depth (+0.53), up-and-right */
 @keyframes floatLayer1 {
-    0%, 100% { transform: translate3d(80px, -80px, 160px) scale(1); }
-    50%      { transform: translate3d(80px, -95px, 160px) scale(1.03); }
+    0%, 100% { transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53)) scale(1); }
+    50%      { transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.32), calc(var(--layer) * 0.53)) scale(1.03); }
 }
 
 /* Middle layer: centered */
 @keyframes floatLayer2 {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    50%      { transform: translate3d(0, -15px, 0) scale(1.03); }
+    50%      { transform: translate3d(0, calc(var(--layer) * -0.05), 0) scale(1.03); }
 }
 
-/* Back layer: furthest in depth (-160px), down-and-left */
+/* Back layer: furthest in depth (-0.53), down-and-left */
 @keyframes floatLayer3 {
-    0%, 100% { transform: translate3d(-80px, 80px, -160px) scale(1); }
-    50%      { transform: translate3d(-80px, 65px, -160px) scale(1.03); }
+    0%, 100% { transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.27), calc(var(--layer) * -0.53)) scale(1); }
+    50%      { transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.22), calc(var(--layer) * -0.53)) scale(1.03); }
 }
 
 /* Code on the stack faces */
@@ -310,14 +321,11 @@ nav {
 }
 
 .layer-code {
-    position: absolute;
-    top: 0;
-    left: 0;
     margin: 0;
-    padding: 42px 18px 18px;
-    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 11px;
-    line-height: 1.7;
+    /* Size scales with the square so the longest line spans ~85% of the
+       width; flex centering (on .layer) spreads the lines down the face. */
+    font-size: clamp(7px, calc(var(--layer) / 20), 16px);
+    line-height: 2;
     white-space: pre;
     color: var(--text-light, #e0e7ff);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
@@ -359,9 +367,9 @@ nav {
     .code-cursor {
         animation: none;
     }
-    .layer:nth-child(1) { transform: translate3d(80px, -80px, 160px); }
+    .layer:nth-child(1) { transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53)); }
     .layer:nth-child(2) { transform: translate3d(0, 0, 0); }
-    .layer:nth-child(3) { transform: translate3d(-80px, 80px, -160px); }
+    .layer:nth-child(3) { transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.27), calc(var(--layer) * -0.53)); }
 }
 
 /* Services Section */
@@ -846,6 +854,12 @@ html {
         gap: 40px;
     }
 
+    /* Logo is now full-width (stacked under the text), so it can use more
+       of the viewport while staying contained. */
+    .hero-visual {
+        --layer: clamp(170px, 34vw, 280px);
+    }
+
     .hero-text h1 {
         font-size: 48px;
     }
@@ -880,6 +894,10 @@ html {
 @media (max-width: 640px) {
     .container {
         padding: 0 20px;
+    }
+
+    .hero-visual {
+        --layer: clamp(150px, 52vw, 240px);
     }
 
     .hero-text h1 {

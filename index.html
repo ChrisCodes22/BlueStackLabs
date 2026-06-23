@@ -43,22 +43,31 @@
                             <span class="layer-label">Front End</span>
 <pre class="layer-code"><span class="tok-tag">&lt;header</span> <span class="tok-attr">class</span>=<span class="tok-str">"hero"</span><span class="tok-tag">&gt;</span>
   <span class="tok-tag">&lt;h1&gt;</span>Blue Stack Labs<span class="tok-tag">&lt;/h1&gt;</span>
-  <span class="tok-tag">&lt;button&gt;</span>Start Project<span class="tok-tag">&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;p&gt;</span>We ship software<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;button</span> <span class="tok-attr">class</span>=<span class="tok-str">"cta"</span><span class="tok-tag">&gt;</span>
+    Start Project
+  <span class="tok-tag">&lt;/button&gt;</span>
 <span class="tok-tag">&lt;/header&gt;</span><span class="code-cursor"></span></pre>
                         </div>
                         <div class="layer">
                             <span class="layer-label">Back End</span>
-<pre class="layer-code"><span class="tok-com">// projects API</span>
-<span class="tok-fn">app</span>.<span class="tok-fn">get</span>(<span class="tok-str">'/api/projects'</span>, (req, res) =&gt; {
-  res.<span class="tok-fn">json</span>(<span class="tok-fn">getProjects</span>())
-})</pre>
+<pre class="layer-code"><span class="tok-com">// projects route</span>
+<span class="tok-kw">const</span> <span class="tok-fn">app</span> = <span class="tok-fn">express</span>()
+<span class="tok-fn">app</span>.<span class="tok-fn">get</span>(<span class="tok-str">'/projects'</span>,
+  (req, res) =&gt; {
+    <span class="tok-kw">const</span> data = <span class="tok-fn">getAll</span>()
+    res.<span class="tok-fn">json</span>(data)
+  })</pre>
                         </div>
                         <div class="layer">
                             <span class="layer-label">Database</span>
-<pre class="layer-code"><span class="tok-com">-- fetch active projects</span>
-<span class="tok-kw">SELECT</span> id, name <span class="tok-kw">FROM</span> projects
+<pre class="layer-code"><span class="tok-com">-- active projects</span>
+<span class="tok-kw">SELECT</span> id, name, status
+<span class="tok-kw">FROM</span> projects
 <span class="tok-kw">WHERE</span> status = <span class="tok-str">'active'</span>
-<span class="tok-kw">ORDER BY</span> id <span class="tok-kw">LIMIT</span> <span class="tok-num">10</span>;</pre>
+  <span class="tok-kw">AND</span> deleted = <span class="tok-num">0</span>
+<span class="tok-kw">ORDER BY</span> created_at <span class="tok-kw">DESC</span>
+<span class="tok-kw">LIMIT</span> <span class="tok-num">10</span>;</pre>
                         </div>
                     </div>
                 </div>
