@@ -244,6 +244,8 @@ nav {
     position: relative;
     width: 100%;
     height: calc(var(--layer) * 1.4);
+    /* Nudge the logo slightly to the right (scales with the logo size) */
+    left: calc(var(--layer) * 0.2);
     transform-style: preserve-3d;
     animation: rotate3d 20s infinite linear;
     overflow: visible;
