@@ -234,10 +234,15 @@ nav {
 /* 3D Stack Visual */
 .hero-visual {
     /* Single source of truth for the logo's size — everything below scales
-       from this, so the whole 3D stack shrinks responsively with the viewport. */
-    --layer: clamp(150px, 24vw, 300px);
+       from this, so the whole 3D stack shrinks responsively with the viewport.
+       Uses a steeper vw factor so the logo shrinks quickly as the window
+       narrows and its spinning sweep stays clear of the text/buttons. */
+    --layer: clamp(140px, 20vw, 300px);
     perspective: calc(var(--layer) * 4);
     overflow: visible;
+    /* Sit the logo a bit lower and reserve space for the upward part of the
+       spin so it doesn't ride up over content above it. */
+    margin-top: calc(var(--layer) * 0.3);
 }
 
 .stack-3d {
@@ -835,6 +840,14 @@ html {
 }
 
 /* Responsive Design */
+/* Two-column hero but the right column is getting narrow — shrink the logo
+   further so its spinning sweep doesn't reach into the text column. */
+@media (max-width: 1200px) {
+    .hero-visual {
+        --layer: clamp(150px, 17vw, 240px);
+    }
+}
+
 @media (max-width: 968px) {
     .hero-content {
         grid-template-columns: 1fr;
