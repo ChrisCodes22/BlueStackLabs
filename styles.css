@@ -247,6 +247,10 @@ nav {
     transform-style: preserve-3d;
     animation: rotate3d 20s infinite linear;
     overflow: visible;
+    /* Spin in place around the middle (Back End) layer's center, instead of
+       orbiting the container's center. The layers are anchored top-left, so
+       the middle layer's center sits at (--layer/2, --layer/2). */
+    transform-origin: calc(var(--layer) / 2) calc(var(--layer) / 2);
 }
 
 @keyframes rotate3d {
@@ -271,39 +275,20 @@ nav {
     padding: 0 6%;
 }
 
-/* Each layer carries its own depth (Z) + diagonal offset inside its
-   keyframes, so the separation persists through the whole animation
-   instead of being flattened by a shared float. */
+/* Each layer holds a static depth (Z) + diagonal offset (fractions of
+   --layer so it scales). No per-layer animation — the only motion is the
+   parent .stack-3d spinning in place, so the stack rotates as one solid
+   unit instead of each layer drifting. */
 .layer:nth-child(1) {
-    animation: floatLayer1 6s infinite ease-in-out;
+    transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53));
 }
 
 .layer:nth-child(2) {
-    animation: floatLayer2 6s infinite ease-in-out 0.2s;
+    transform: translate3d(0, 0, 0);
 }
 
 .layer:nth-child(3) {
-    animation: floatLayer3 6s infinite ease-in-out 0.4s;
-}
-
-/* Offsets are expressed as fractions of --layer so the depth/diagonal
-   separation scales proportionally as the logo resizes. */
-/* Front layer: closest in depth (+0.53), up-and-right */
-@keyframes floatLayer1 {
-    0%, 100% { transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53)) scale(1); }
-    50%      { transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.32), calc(var(--layer) * 0.53)) scale(1.03); }
-}
-
-/* Middle layer: centered */
-@keyframes floatLayer2 {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    50%      { transform: translate3d(0, calc(var(--layer) * -0.05), 0) scale(1.03); }
-}
-
-/* Back layer: furthest in depth (-0.53), down-and-left */
-@keyframes floatLayer3 {
-    0%, 100% { transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.27), calc(var(--layer) * -0.53)) scale(1); }
-    50%      { transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.22), calc(var(--layer) * -0.53)) scale(1.03); }
+    transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.27), calc(var(--layer) * -0.53));
 }
 
 /* Code on the stack faces */
