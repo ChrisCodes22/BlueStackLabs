@@ -29,9 +29,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
-        linear-gradient(rgba(0, 102, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 102, 255, 0.05) 1px, transparent 1px);
+    background-image:
+        linear-gradient(rgba(0, 102, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 102, 255, 0.025) 1px, transparent 1px);
     background-size: 50px 50px;
     animation: gridMove 20s linear infinite;
     z-index: 0;
@@ -47,7 +47,7 @@ body {
     position: fixed;
     border-radius: 50%;
     filter: blur(80px);
-    opacity: 0.3;
+    opacity: 0.18;
     animation: float 15s infinite ease-in-out;
     z-index: 0;
 }
@@ -73,6 +73,142 @@ body {
 @keyframes float {
     0%, 100% { transform: translate(0, 0) scale(1); }
     50% { transform: translate(50px, -50px) scale(1.1); }
+}
+
+/* ── Camera lens / iris-shutter background motif ──────────────────────── */
+.camera-lens {
+    --lens: clamp(300px, 42vw, 640px);
+    position: fixed;
+    top: 4%;
+    right: -8%;
+    width: var(--lens);
+    height: var(--lens);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    animation: lensIntro 2.4s cubic-bezier(0.16, 0.84, 0.3, 1) 0.3s forwards;
+}
+
+.camera-lens > * {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+}
+
+/* Outer glow / flare */
+.lens-flare {
+    inset: -12%;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.30) 0%, rgba(6, 182, 212, 0.12) 45%, transparent 65%);
+    filter: blur(18px);
+}
+
+/* Dark lens barrel */
+.lens-ring {
+    background: radial-gradient(circle, #060c18 0% 30%, #0a1730 30% 44%, #050a16 44% 50%);
+    border: 1px solid rgba(125, 211, 252, 0.15);
+    box-shadow:
+        inset 0 0 0 3px rgba(125, 211, 252, 0.16),
+        inset 0 0 55px rgba(0, 0, 0, 0.85),
+        0 0 90px rgba(0, 102, 255, 0.22);
+}
+
+/* Coated-glass chromatic rim (thin spinning ring) */
+.lens-rim {
+    background: conic-gradient(from 210deg, #7dd3fc, #06b6d4, #0066ff, #fcd34d, #06b6d4, #7dd3fc);
+    -webkit-mask: radial-gradient(circle, transparent 0 46%, #000 47.5% 49.5%, transparent 51%);
+            mask: radial-gradient(circle, transparent 0 46%, #000 47.5% 49.5%, transparent 51%);
+    mix-blend-mode: screen;
+    opacity: 0.85;
+    animation: lensSpin 60s linear infinite reverse;
+}
+
+/* Iris shutter blades (radial facets, masked to leave the aperture hole) */
+.lens-blades {
+    inset: 6%;
+    background: repeating-conic-gradient(from 0deg,
+        #0a1628 0deg, #16284a 22deg, #25437f 28deg, #0a1628 30deg);
+    -webkit-mask: radial-gradient(circle, transparent 0 24%, #000 25.5% 100%);
+            mask: radial-gradient(circle, transparent 0 24%, #000 25.5% 100%);
+    animation: lensSpin 50s linear infinite;
+}
+
+/* Hexagonal aperture opening — light coming through the lens */
+.lens-aperture {
+    inset: 33%;
+    clip-path: polygon(50% 2%, 95% 26%, 95% 74%, 50% 98%, 5% 74%, 5% 26%);
+    background: radial-gradient(circle, rgba(180, 230, 255, 0.55) 0%, rgba(0, 163, 255, 0.25) 45%, rgba(0, 102, 255, 0.08) 70%, transparent 80%);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.25);
+    animation: shutter 11s ease-in-out infinite;
+}
+
+/* Glass reflection + central bloom + diagonal flare streak */
+.lens-glass {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(0, 163, 255, 0.22) 0%, transparent 26%),
+        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.22) 0%, transparent 22%),
+        linear-gradient(125deg, transparent 42%, rgba(255, 255, 255, 0.07) 49%, transparent 55%);
+}
+
+@keyframes lensIntro {
+    0%   { opacity: 0; transform: scale(0.8) rotate(-14deg); }
+    60%  { opacity: 0.8; }
+    100% { opacity: 0.8; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes lensSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Old-school leaf-shutter snap: open most of the time, quick close + flash */
+@keyframes shutter {
+    0%, 70%, 100% { transform: scale(1);    filter: brightness(1); }
+    80%           { transform: scale(0.06); filter: brightness(1); }
+    83%           { transform: scale(0.06); filter: brightness(1.9); }
+    88%           { transform: scale(1);    filter: brightness(1.2); }
+}
+
+/* "Tap the lens" caption above the logo/lens */
+.lens-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    width: max-content;
+    margin: 0 auto 16px;
+    padding: 9px 20px;
+    border: 1px solid rgba(125, 211, 252, 0.25);
+    border-radius: 999px;
+    background: rgba(8, 14, 28, 0.45);
+    backdrop-filter: blur(4px);
+    text-decoration: none;
+    position: relative;
+    z-index: 2;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.lens-cta:hover {
+    border-color: var(--light-blue);
+    box-shadow: 0 0 25px rgba(0, 163, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+.lens-cta-eyebrow {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--light-blue);
+}
+
+.lens-cta-main {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .camera-lens { animation: none; opacity: 0.8; }
+    .lens-rim, .lens-blades, .lens-aperture { animation: none; }
 }
 
 .container {
