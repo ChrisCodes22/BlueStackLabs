@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Blue Stack Labs">
+  <rect width="256" height="256" rx="52" fill="#0f172a"/>
+  <g transform="translate(50,40)">
+    <rect x="0"  y="80" width="96" height="96" rx="8" fill="#1e40af"/>
+    <rect x="30" y="40" width="96" height="96" rx="8" fill="#2563eb"/>
+    <rect x="60" y="0"  width="96" height="96" rx="8" fill="#3b82f6"/>
+  </g>
+</svg>
