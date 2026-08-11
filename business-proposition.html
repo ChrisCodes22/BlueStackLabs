@@ -639,6 +639,55 @@
     line-height: 1.7;
   }
 
+  /* ── DATA FLOW ── */
+  .flow-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0 24px;
+  }
+
+  .flow-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+
+  .flow-head {
+    padding: 18px 26px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+  }
+
+  .flow-head.sent  { background: #f0f7ff; color: var(--dblue); border-bottom: 3px solid var(--blue); }
+  .flow-head.never { background: #f0faf4; color: var(--green); border-bottom: 3px solid var(--green); }
+
+  .flow-list {
+    list-style: none;
+    padding: 16px 26px;
+  }
+
+  .flow-list li {
+    padding: 10px 0;
+    font-size: 14.5px;
+    border-bottom: 1px solid var(--mid);
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .flow-list li:last-child { border-bottom: none; }
+  .flow-list li strong { color: var(--navy); font-weight: 600; }
+
+  .flow-list li .note {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 3px;
+    line-height: 1.55;
+  }
+
   /* ── IMPLEMENTATION ── */
   .impl-grid {
     display: grid;
@@ -897,6 +946,7 @@
     .problem-grid { grid-template-columns: 1fr; }
     .portal-grid { grid-template-columns: 1fr; }
     .band-grid { grid-template-columns: 1fr; }
+    .flow-grid { grid-template-columns: 1fr; }
 
     .pricing-grid { grid-template-columns: 1fr !important; }
 
@@ -1214,7 +1264,7 @@
 <div class="section">
   <div class="section-label">05 — New: Manager Visibility</div>
   <h2>The <em>Admin Portal</em></h2>
-  <p class="lead">The system now ships with a management portal built for the people overseeing the floor. Licenses, technician activity, and the value being returned are all visible in one place, updating live — which is exactly where the figures in Section 02 came from.</p>
+  <p class="lead">The system now ships with a management portal, built to a specification that came directly from operations: show which technicians are using which templates, where, and how many times. Licenses, technician activity, and the value being returned are all visible in one place, updating live — which is exactly where the figures in Section 02 came from.</p>
 
   <div class="portal-grid">
     <div class="portal-card">
@@ -1223,7 +1273,7 @@
     </div>
     <div class="portal-card">
       <h3>Per-Technician Visibility</h3>
-      <p>Usage is broken out by technician, so it is clear who is using the tool and who has not started — the difference between 6 and 7 active licenses is visible, not assumed.</p>
+      <p>The feature operations specifically asked for. Usage is broken out by technician, location, and template, so it is clear who is using the tool and who has not started — the difference between 6 and 7 active licenses is visible, not assumed.</p>
     </div>
     <div class="portal-card">
       <h3>License Management</h3>
@@ -1445,8 +1495,8 @@
       <div class="impl-icon">
         <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
       </div>
-      <h3>Secure &amp; Private</h3>
-      <p>Story text is inserted locally in the browser. Only usage counts — which template, which license, when, and desktop or mobile — are sent to the admin portal for reporting. No repair content or NetSuite record data leaves your environment.</p>
+      <h3>Runs Only Inside NetSuite</h3>
+      <p>The extension is scoped to four specific origins in its manifest — there is no wildcard and no permission to run on any other site. It cannot read, and never loads on, anything outside NetSuite. Full data flow is itemized below.</p>
     </div>
     <div class="impl-card">
       <div class="impl-icon">
@@ -1455,6 +1505,41 @@
       <h3>Pays Back Monthly</h3>
       <p>At $10 per license the cost is recovered within the first few stories each month. There is no payback period to wait out — the last 30 days closed 5.2× ahead.</p>
     </div>
+  </div>
+
+  <h3 style="font-family:'DM Serif Display',serif; font-size:26px; color:var(--navy); margin:56px 0 8px;">Exactly what leaves the device</h3>
+  <p style="color:var(--muted); font-size:15px; margin-bottom:8px; max-width:720px;">Two endpoints receive anything at all: a static template file the extension reads from, and the usage log it writes to. This is the complete list, field for field.</p>
+
+  <div class="flow-grid">
+    <div class="flow-card">
+      <div class="flow-head sent">Sent when a template is inserted</div>
+      <ul class="flow-list">
+        <li><strong>Template title</strong><span class="note">The label only — e.g. "Slide-out motor replacement" — capped at 200 characters.</span></li>
+        <li><strong>License key</strong><span class="note">Identifies the seat the insert belongs to.</span></li>
+        <li><strong>Technician name</strong><span class="note">Taken from the license record.</span></li>
+        <li><strong>Timestamp</strong><span class="note">ISO 8601, to the second.</span></li>
+        <li><strong>Device fingerprint</strong><span class="note">A coarse identifier: browser language, color depth, CPU core count, platform, and a user agent with version numbers stripped. Not a serial number, MAC address, IP address, or network identity. Its only job is stopping one license being shared across a shop.</span></li>
+      </ul>
+    </div>
+    <div class="flow-card">
+      <div class="flow-head never">Never transmitted</div>
+      <ul class="flow-list">
+        <li><strong>The repair narrative the technician writes</strong><span class="note">The story text itself never leaves the browser.</span></li>
+        <li><strong>NetSuite record data</strong><span class="note">Customer names, VINs, work order contents, pricing, notes.</span></li>
+        <li><strong>Credentials, session cookies, or tokens</strong></li>
+        <li><strong>Page URLs, page contents, or the DOM</strong></li>
+        <li><strong>Anything from non-NetSuite sites</strong><span class="note">The extension does not load outside NetSuite at all.</span></li>
+        <li><strong>Browsing history, other tabs, or files</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="method">
+    <h4>Two points on visibility and review</h4>
+    <ol>
+      <li><strong>Per-technician tracking is here because operations asked for it.</strong> The requirement came directly from the operations manager: visibility into which technicians are using which templates, where, and how many times. The portal was built to that specification, and the monitoring approach has already been cleared and approved. The scope stays narrow by design — which template, what time — never keystrokes and never content.</li>
+      <li><strong>A full technical and security overview is available on request.</strong> It documents the permission model, both endpoints, the fingerprint composition, and the residual risks in writing — ready for IT review rather than assembled after the fact.</li>
+    </ol>
   </div>
 </div>
 
