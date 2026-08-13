@@ -7,6 +7,9 @@
     --text-light: #e0e7ff;
     --text-dim: #94a3b8;
     --accent-cyan: #06b6d4;
+    /* Wordmark typeface — kept separate from the other Orbitron headings so
+       the logo can be changed on its own. */
+    --font-logo: 'Orbitron', sans-serif;
 }
 
 * {
@@ -41,6 +44,9 @@ body {
     0% { transform: translate(0, 0); }
     100% { transform: translate(50px, 50px); }
 }
+
+/* The interactive background (pointer glow + warping grid canvas) lives in
+   background.css / background.js, shared with plans.html. */
 
 /* Glowing orbs in background */
 .orb {
@@ -98,7 +104,7 @@ nav {
 }
 
 .logo {
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-logo);
     font-size: 28px;
     font-weight: 900;
     letter-spacing: -1px;
@@ -106,6 +112,7 @@ nav {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-decoration: none;
 }
 
 .nav-links {
@@ -140,6 +147,16 @@ nav {
 }
 
 .nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Current page — set in the markup on subpages, and by script.js while
+   scrolling the front page. */
+.nav-links a.active {
+    color: var(--text-light);
+}
+
+.nav-links a.active::after {
     width: 100%;
 }
 
@@ -237,7 +254,7 @@ nav {
        from this, so the whole 3D stack shrinks responsively with the viewport.
        Uses a steeper vw factor so the logo shrinks quickly as the window
        narrows and its spinning sweep stays clear of the text/buttons. */
-    --layer: clamp(140px, 20vw, 300px);
+    --layer: clamp(160px, 23vw, 345px);
     perspective: calc(var(--layer) * 4);
     overflow: visible;
     /* Sit the logo a bit lower and reserve space for the upward part of the
@@ -253,11 +270,31 @@ nav {
     left: calc(var(--layer) * 0.35);
     transform-style: preserve-3d;
     animation: rotate3d 20s infinite linear;
+    /* Closed by default: the animation is held at its 0% keyframe, which parks
+       the stack square-on with a slight top-edge tilt. Opening just resumes it. */
+    animation-play-state: paused;
     overflow: visible;
+    cursor: pointer;
     /* Spin in place around the middle (Back End) layer's center, instead of
        orbiting the container's center. The layers are anchored top-left, so
        the middle layer's center sits at (--layer/2, --layer/2). */
     transform-origin: calc(var(--layer) / 2) calc(var(--layer) / 2);
+}
+
+.stack-3d.is-open {
+    animation-play-state: running;
+}
+
+/* Applied by script.js only while collapsing. Pausing a live rotation would
+   freeze the square at whatever angle it happened to reach, so the animation
+   is dropped and the transform transitioned back to square-on instead. */
+.stack-3d.is-unwinding {
+    animation: none;
+    transition: transform 0.6s cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+
+.stack-3d:focus-visible {
+    outline: none;
 }
 
 @keyframes rotate3d {
@@ -282,12 +319,20 @@ nav {
     padding: 0 6%;
 }
 
-/* Each layer holds a static depth (Z) + diagonal offset (fractions of
-   --layer so it scales). No per-layer animation — the only motion is the
-   parent .stack-3d spinning in place, so the stack rotates as one solid
-   unit instead of each layer drifting. */
+/* The layers move between three states — closed, hover-peek, open — as
+   fractions of --layer so they scale with the square. There is no per-layer
+   animation; the only continuous motion is the parent .stack-3d spinning, so
+   the opened stack still rotates as one solid unit. */
+.layer {
+    transition: transform 0.55s cubic-bezier(0.22, 0.7, 0.28, 1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+}
+
+/* Closed: a shallow diagonal fan, so the stack reads as three levels at rest
+   without giving away the full exploded view. */
 .layer:nth-child(1) {
-    transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53));
+    transform: translate3d(calc(var(--layer) * 0.10), calc(var(--layer) * -0.10), calc(var(--layer) * 0.16));
 }
 
 .layer:nth-child(2) {
@@ -295,7 +340,97 @@ nav {
 }
 
 .layer:nth-child(3) {
+    transform: translate3d(calc(var(--layer) * -0.10), calc(var(--layer) * 0.10), calc(var(--layer) * -0.16));
+}
+
+/* Hover: widen the fan a little and light the edges — the affordance that
+   says this is clickable. Transforms are applied to the layers rather than
+   .stack-3d, whose transform belongs to the spin keyframes. The stagger lives
+   here so the layers settle back together without one. */
+.stack-3d:not(.is-open):hover .layer:nth-child(1),
+.stack-3d:not(.is-open):focus-visible .layer:nth-child(1) {
+    transform: translate3d(calc(var(--layer) * 0.15), calc(var(--layer) * -0.15), calc(var(--layer) * 0.26));
+}
+
+.stack-3d:not(.is-open):hover .layer:nth-child(2),
+.stack-3d:not(.is-open):focus-visible .layer:nth-child(2) {
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0.04s;
+}
+
+.stack-3d:not(.is-open):hover .layer:nth-child(3),
+.stack-3d:not(.is-open):focus-visible .layer:nth-child(3) {
+    transform: translate3d(calc(var(--layer) * -0.15), calc(var(--layer) * 0.15), calc(var(--layer) * -0.26));
+    transition-delay: 0.08s;
+}
+
+.stack-3d:not(.is-open):hover .layer,
+.stack-3d:not(.is-open):focus-visible .layer {
+    border-color: rgba(0, 163, 255, 0.6);
+    box-shadow: 0 0 30px rgba(0, 102, 255, 0.25);
+}
+
+/* Open: the full exploded stack. */
+.stack-3d.is-open .layer:nth-child(1) {
+    transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53));
+}
+
+.stack-3d.is-open .layer:nth-child(2) {
+    transform: translate3d(0, 0, 0);
+}
+
+.stack-3d.is-open .layer:nth-child(3) {
     transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.27), calc(var(--layer) * -0.53));
+}
+
+/* Closed-state cover on the front face. Opaque enough to hide the code
+   sitting underneath it on the same layer. */
+.stack-cta {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--layer) * 0.07);
+    padding: 0 9%;
+    text-align: center;
+    background:
+        linear-gradient(135deg, rgba(0, 102, 255, 0.38), rgba(0, 163, 255, 0.16)),
+        var(--dark-bg);
+    transition: opacity 0.35s ease;
+}
+
+.stack-cta-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(13px, calc(var(--layer) / 11), 26px);
+    font-weight: 900;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff, var(--light-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stack-cta-hint {
+    font-size: clamp(9px, calc(var(--layer) / 26), 12px);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    transition: color 0.3s ease;
+}
+
+.stack-3d:hover .stack-cta-hint,
+.stack-3d:focus-visible .stack-cta-hint {
+    color: var(--light-blue);
+}
+
+.stack-3d.is-open .stack-cta {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Code on the stack faces */
@@ -350,18 +485,23 @@ nav {
     50.01%, 100% { opacity: 0; }
 }
 
-/* Pause motion for users who prefer reduced motion. The per-layer
-   positions live in the keyframes, so apply them statically here
-   to keep the layers separated even with the animation off. */
+/* Pause decorative motion for users who prefer reduced motion. Opening and
+   closing the stack is a deliberate interaction rather than decoration, so it
+   still works — it just changes state immediately instead of animating, and
+   the opened stack doesn't spin. */
 @media (prefers-reduced-motion: reduce) {
     .stack-3d,
-    .layer,
-    .code-cursor {
+    .code-cursor,
+    .grid-background,
+    .orb {
         animation: none;
     }
-    .layer:nth-child(1) { transform: translate3d(calc(var(--layer) * 0.27), calc(var(--layer) * -0.27), calc(var(--layer) * 0.53)); }
-    .layer:nth-child(2) { transform: translate3d(0, 0, 0); }
-    .layer:nth-child(3) { transform: translate3d(calc(var(--layer) * -0.27), calc(var(--layer) * 0.27), calc(var(--layer) * -0.53)); }
+
+    .layer,
+    .flip-inner,
+    .carousel-track {
+        transition-duration: 0.01ms;
+    }
 }
 
 /* Services Section */
@@ -426,6 +566,318 @@ nav {
     color: var(--text-dim);
     line-height: 1.6;
     font-size: 16px;
+}
+
+/* Standalone pages (services, technology, work) open straight into content,
+   so they need the breathing room the hero gives the front page. */
+.page-section {
+    padding: 80px 0 100px;
+}
+
+/* Only three cards carry this section, so they get more room than the
+   six-card grid on the Services page. */
+.services-teaser .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 34px;
+}
+
+.services-teaser .service-card {
+    padding: 52px 44px;
+}
+
+.services-teaser .service-icon {
+    font-size: 58px;
+    margin-bottom: 26px;
+}
+
+.services-teaser .service-card h3 {
+    font-size: 27px;
+    margin-bottom: 18px;
+}
+
+.services-teaser .service-card p {
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+.projects-more {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.projects-more a {
+    font-weight: 600;
+    font-size: 17px;
+    text-decoration: none;
+}
+
+/* Project carousel */
+.projects {
+    padding: 100px 0;
+}
+
+.carousel {
+    position: relative;
+    max-width: 780px;
+    margin: 0 auto;
+    /* Room for the arrows to sit outside the card on wide screens. */
+    padding: 0 60px;
+}
+
+.carousel-viewport {
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.carousel-track {
+    display: flex;
+    list-style: none;
+    transition: transform 0.6s cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(10, 14, 26, 0.85);
+    color: var(--text-light);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.carousel-arrow:hover {
+    border-color: var(--primary-blue);
+    background: rgba(0, 102, 255, 0.2);
+}
+
+.carousel-prev { left: 0; }
+.carousel-next { right: 0; }
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot[aria-selected="true"] {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    transform: scale(1.2);
+}
+
+/* Flip cards
+   ----------
+   Both faces are stacked in the same box with backface-visibility hidden, so
+   the card has one height and the back is simply the front rotated 180deg. */
+.flip-card {
+    position: relative;
+    /* Tall enough that the back copy fits without scrolling at every width. */
+    height: clamp(420px, 48vw, 530px);
+    perspective: 1600px;
+    cursor: pointer;
+}
+
+.flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.22, 0.7, 0.28, 1);
+}
+
+.flip-card.is-flipped .flip-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.flip-card:hover .flip-face,
+.flip-card:focus-visible .flip-face {
+    border-color: var(--primary-blue);
+    box-shadow: 0 20px 60px rgba(0, 102, 255, 0.2);
+}
+
+.flip-card:focus-visible {
+    outline: none;
+}
+
+/* Screenshot on top, caption underneath. These are UI screenshots rather than
+   photographs, so they're fitted whole (contain) instead of cropped to fill —
+   a cover-crop lops the edges off the interface being shown. */
+.flip-front {
+    display: flex;
+    flex-direction: column;
+    background: var(--darker-bg);
+}
+
+.flip-front img {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+    padding: 22px 22px 0;
+    display: block;
+}
+
+.flip-front-meta {
+    padding: 22px 30px 26px;
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.10), rgba(0, 163, 255, 0.03));
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.flip-front-meta h3 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 4px 0 10px;
+}
+
+.flip-hint {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    transition: color 0.3s ease;
+}
+
+.flip-card:hover .flip-hint,
+.flip-card:focus-visible .flip-hint {
+    color: var(--light-blue);
+}
+
+.flip-back {
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 36px;
+    background:
+        linear-gradient(135deg, rgba(0, 102, 255, 0.12), rgba(0, 163, 255, 0.04)),
+        var(--dark-bg);
+    /* Should fit at every width, but scroll rather than spill if the copy on a
+       future card runs long. */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* The back is a flex column, so these would otherwise stretch to full width
+   instead of hugging their text. */
+.flip-back .project-tag,
+.flip-back .flip-link {
+    align-self: flex-start;
+}
+
+.flip-back h3 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 6px 0 14px;
+}
+
+.flip-back p {
+    color: var(--text-dim);
+    line-height: 1.65;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.flip-back .project-tech {
+    margin-top: 14px;
+}
+
+.flip-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--light-blue);
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.flip-link:hover {
+    text-decoration: underline;
+}
+
+.project-screenshot {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Technology page detail cards */
+.tech-detail {
+    padding: 0 0 100px;
+}
+
+.tech-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tech-detail-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tech-detail-card:hover {
+    border-color: var(--primary-blue);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tech-detail-card h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.tech-detail-card p {
+    color: var(--text-dim);
+    line-height: 1.65;
+    font-size: 15px;
 }
 
 /* Tech Stack */
@@ -789,11 +1241,12 @@ footer {
 }
 
 .footer-brand h3 {
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-logo);
     font-size: 24px;
     margin-bottom: 15px;
     background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -844,7 +1297,7 @@ html {
    further so its spinning sweep doesn't reach into the text column. */
 @media (max-width: 1200px) {
     .hero-visual {
-        --layer: clamp(150px, 17vw, 240px);
+        --layer: clamp(170px, 19.5vw, 276px);
     }
 }
 
@@ -857,18 +1310,23 @@ html {
     /* Logo is now full-width (stacked under the text), so it can use more
        of the viewport while staying contained. */
     .hero-visual {
-        --layer: clamp(170px, 34vw, 280px);
+        --layer: clamp(195px, 39vw, 322px);
     }
 
     .hero-text h1 {
         font-size: 48px;
     }
 
-    .services-grid {
+    .services-grid,
+    .services-teaser .services-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
     .project-showcase {
+        grid-template-columns: 1fr;
+    }
+
+    .tech-detail-grid {
         grid-template-columns: 1fr;
     }
 
@@ -897,19 +1355,42 @@ html {
     }
 
     .hero-visual {
-        --layer: clamp(150px, 52vw, 240px);
+        --layer: clamp(170px, 56vw, 276px);
     }
 
     .hero-text h1 {
         font-size: 36px;
     }
 
-    .services-grid {
+    .services-grid,
+    .services-teaser .services-grid {
         grid-template-columns: 1fr;
     }
 
     .tech-logos {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Not enough width to park the arrows beside the card — overlay them on
+       its lower corners instead. */
+    .carousel {
+        padding: 0;
+    }
+
+    .carousel-arrow {
+        top: auto;
+        bottom: 12px;
+        transform: none;
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    .carousel-prev { left: 12px; }
+    .carousel-next { right: 12px; }
+
+    .flip-back {
+        padding: 28px 24px;
     }
 
     .footer-content {

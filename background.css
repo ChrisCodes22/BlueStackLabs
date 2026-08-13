@@ -1,0 +1,69 @@
+/* Pointer glow — shared by index.html, plans.html, and the subpages.
+   Pairs with background.js, which sets --mx/--my on :root.
+   The grid itself is static; the only motion is the light following the
+   cursor. */
+
+/* Soft glow trailing the pointer. */
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 160px;
+    /* Centre the circle on the pointer, so the JS only has to translate. */
+    margin: -80px 0 0 -80px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(0, 102, 255, 0.22) 0%,
+        rgba(6, 182, 212, 0.10) 40%,
+        transparent 70%);
+    filter: blur(20px);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 0.4s ease;
+    will-change: transform;
+}
+
+/* A brighter copy of the grid, revealed only near the pointer.
+   The mask lives on this wrapper rather than on the grid itself: the grid
+   drifts via gridMove, and a mask on a moving element would drift along with
+   it instead of staying under the pointer. */
+.grid-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 0.4s ease;
+    -webkit-mask-image: radial-gradient(circle 120px at var(--mx, -999px) var(--my, -999px),
+        #000 0%, rgba(0, 0, 0, 0.4) 50%, transparent 75%);
+    mask-image: radial-gradient(circle 120px at var(--mx, -999px) var(--my, -999px),
+        #000 0%, rgba(0, 0, 0, 0.4) 50%, transparent 75%);
+}
+
+.grid-background--lit {
+    background-image:
+        linear-gradient(rgba(0, 163, 255, 0.30) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 163, 255, 0.30) 1px, transparent 1px);
+}
+
+body.cursor-active .cursor-glow,
+body.cursor-active .grid-glow {
+    opacity: 1;
+}
+
+/* No pointer to follow on touch devices. */
+@media (hover: none), (pointer: coarse) {
+    .cursor-glow,
+    .grid-glow {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor-glow,
+    .grid-glow {
+        display: none;
+    }
+}

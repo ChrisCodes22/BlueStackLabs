@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="background.css">
     <style>
     :root {
         --primary-blue: #0066FF;
@@ -21,6 +22,9 @@
         --accent-cyan: #06b6d4;
         --card-bg: rgba(255,255,255,0.03);
         --card-border: rgba(255,255,255,0.08);
+        /* Wordmark typeface — kept separate from the other Orbitron headings
+           so the logo can be changed on its own. */
+        --font-logo: 'Orbitron', sans-serif;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -50,6 +54,9 @@
     .orb-2 { width: 320px; height: 320px; background: var(--accent-cyan); bottom: 200px; left: -80px; animation-delay: 5s; }
     @keyframes float { 0%,100% { transform: translate(0,0) scale(1);} 50% { transform: translate(50px,-50px) scale(1.1);} }
 
+    /* The interactive background (pointer glow + warping grid canvas) lives
+       in background.css / background.js, shared with index.html. */
+
     .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
 
     /* Nav */
@@ -59,7 +66,7 @@
     }
     @keyframes slideDown { from { transform: translateY(-50px); opacity: 0;} to { transform: translateY(0); opacity: 1;} }
     .logo {
-        font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; letter-spacing: -1px;
+        font-family: var(--font-logo); font-size: 28px; font-weight: 900; letter-spacing: -1px;
         background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
         -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         text-decoration: none;
@@ -206,7 +213,7 @@
     /* Footer */
     footer { border-top: 1px solid var(--card-border); padding: 50px 0 30px; }
     .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-    .footer-content h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .footer-content h3 { font-family: var(--font-logo); font-size: 20px; background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .footer-content p { color: var(--text-dim); font-size: 14px; }
     .footer-content a { color: var(--light-blue); text-decoration: none; }
 
@@ -237,6 +244,8 @@
 </head>
 <body>
     <div class="grid-background"></div>
+    <div class="grid-glow"><div class="grid-background grid-background--lit"></div></div>
+    <div class="cursor-glow"></div>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
@@ -244,8 +253,9 @@
         <nav>
             <a href="index.html" class="logo">BLUE STACK LABS</a>
             <ul class="nav-links">
-                <li><a href="index.html#services">Services</a></li>
-                <li><a href="index.html#work">Work</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="technology.html">Technology</a></li>
+                <li><a href="work.html">Work</a></li>
                 <li><a href="#plans">Plans</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -472,7 +482,7 @@
 
                         <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
                             <button type="submit" id="inq-submit" class="btn btn-primary" style="min-width:200px;">Send Inquiry</button>
-                            <a href="index.html#work" class="btn btn-secondary">See Our Work</a>
+                            <a href="work.html" class="btn btn-secondary">See Our Work</a>
                         </div>
                         <p style="color:var(--text-dim); font-size:13px;">We'll get back to you within one business day.</p>
                     </form>
@@ -586,5 +596,7 @@
         });
     }
     </script>
+
+    <script src="background.js"></script>
 </body>
 </html>
