@@ -18,6 +18,13 @@
     box-sizing: border-box;
 }
 
+/* overflow-x on body alone does not stop the document itself from
+   overflowing — html needs it too, or a stray wide element leaves the page
+   pannable sideways and shifted left when zoomed out on a phone. */
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Work Sans', sans-serif;
     background: var(--darker-bg);
@@ -287,7 +294,10 @@ nav {
 
 .stack-3d {
     position: relative;
-    width: 100%;
+    /* Only needs to be as wide as one layer: the three layers are absolutely
+       positioned against this box's top-left, so its width doesn't place them.
+       At 100% it hung ~80px past the viewport — invisible, but real overflow. */
+    width: var(--layer);
     height: calc(var(--layer) * 1.4);
     /* Nudge the logo to the right (scales with the logo size) */
     left: calc(var(--layer) * 0.35);
@@ -1494,6 +1504,38 @@ footer {
     margin-bottom: 40px;
 }
 
+/* Touch devices
+   -------------
+   A tap leaves :hover stuck on the last-tapped element, so a card that lifts
+   or fans on hover stays that way afterwards and reads as broken. Reset those
+   states back to rest where there's no real pointer — tap still opens the
+   stack and flips the cards, since those are driven by class, not by hover. */
+@media (hover: none) {
+    .stack-3d:not(.is-open):hover .layer:nth-child(1) {
+        transform: translate3d(calc(var(--layer) * 0.10), calc(var(--layer) * -0.10), calc(var(--layer) * 0.16));
+    }
+
+    .stack-3d:not(.is-open):hover .layer:nth-child(3) {
+        transform: translate3d(calc(var(--layer) * -0.10), calc(var(--layer) * 0.10), calc(var(--layer) * -0.16));
+    }
+
+    .stack-3d:not(.is-open):hover .layer {
+        border-color: rgba(0, 102, 255, 0.3);
+        box-shadow: none;
+    }
+
+    .flip-card:hover .flip-face {
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+    }
+
+    .service-card:hover,
+    .tech-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
 /* Smooth Scrolling */
 html {
     scroll-behavior: smooth;
@@ -1518,6 +1560,15 @@ html {
        of the viewport while staying contained. */
     .hero-visual {
         --layer: clamp(195px, 39vw, 322px);
+    }
+
+    /* The `left` nudge exists to sit the stack in the right-hand column of
+       the two-column desktop hero. Once the hero stacks, that same nudge
+       shoves it off the side of the screen — so centre it instead. */
+    .stack-3d {
+        left: 0;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .hero-text h1 {
@@ -1561,8 +1612,10 @@ html {
         padding: 0 20px;
     }
 
+    /* Leave room for the open stack to fan out (±0.27 of --layer each way)
+       without reaching the screen edge. */
     .hero-visual {
-        --layer: clamp(170px, 56vw, 276px);
+        --layer: clamp(150px, 48vw, 250px);
     }
 
     .hero-text h1 {
@@ -1584,13 +1637,14 @@ html {
         padding: 0;
     }
 
+    /* 46px keeps this above the 44px minimum comfortable touch target. */
     .carousel-arrow {
         top: auto;
         bottom: 12px;
         transform: none;
-        width: 40px;
-        height: 40px;
-        font-size: 22px;
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
     }
 
     .carousel-prev { left: 12px; }
