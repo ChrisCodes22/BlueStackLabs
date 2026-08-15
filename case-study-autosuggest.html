@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Story Template Autosuggest — Blue Stack Labs</title>
+    <meta name="description" content="A Chrome extension and licensing portal built for a manufacturing client, returning roughly 5x its subscription cost in recovered labour — measured by direct count, not estimated.">
+    <link rel="canonical" href="https://bluestacklabs.software/case-study-autosuggest.html">
+
+    <!-- Open Graph / Twitter: without these, sharing a link anywhere renders
+         a bare URL with no title, description, or image. -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Blue Stack Labs">
+    <meta property="og:url" content="https://bluestacklabs.software/case-study-autosuggest.html">
+    <meta property="og:title" content="Case Study: Story Template Autosuggest — Blue Stack Labs">
+    <meta property="og:description" content="A Chrome extension and licensing portal returning roughly 5x its subscription cost in recovered labour — measured by direct count, not estimated.">
+    <meta property="og:image" content="https://bluestacklabs.software/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Blue Stack Labs — Turning Ideas Into Working Software">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Case Study: Story Template Autosuggest — Blue Stack Labs">
+    <meta name="twitter:description" content="A Chrome extension and licensing portal returning roughly 5x its subscription cost in recovered labour — measured by direct count, not estimated.">
+    <meta name="twitter:image" content="https://bluestacklabs.software/images/og-image.png">
+    <meta name="theme-color" content="#050810">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="background.css">
+</head>
+<body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="grid-background"></div>
+    <div class="grid-glow"><div class="grid-background grid-background--lit"></div></div>
+    <div class="cursor-glow"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <nav>
+            <a href="index.html" class="logo">BLUE STACK LABS</a>
+            <ul class="nav-links">
+                <li><a href="services.html">Services</a></li>
+                <li><a href="technology.html">Technology</a></li>
+                <li><a href="work.html" class="active">Work</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <main id="main">
+            <section class="page-section case-hero">
+                <div class="project-tag">CASE STUDY · MANUFACTURING</div>
+                <h1>Five times its cost, <span class="gradient-text">measured not claimed</span></h1>
+                <p class="case-lead">A production floor was retyping the same handful of story write-ups every day. We replaced the typing with a Chrome extension, and built the licensing portal that proves what it saved.</p>
+            </section>
+
+            <section class="metric-section">
+                <div class="metric-grid">
+                    <div class="metric">
+                        <div class="metric-value">~5&times;</div>
+                        <div class="metric-label">Return on subscription cost</div>
+                        <div class="metric-note">Recovered labour vs. what's billed</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">3 mo</div>
+                        <div class="metric-label">In production, paid</div>
+                        <div class="metric-note">Still running today</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">Live</div>
+                        <div class="metric-label">Usage counted in real time</div>
+                        <div class="metric-note">Direct count, never sampled</div>
+                    </div>
+                </div>
+                <p class="metric-caption">Figures come from the licensing portal's own usage tracking. Specific volumes and rates are the client's and aren't published here.</p>
+            </section>
+
+            <section class="case-body">
+                <h2>The problem</h2>
+                <p>Technicians on the production floor write the same story entries over and over in NetSuite — bug fixes, investigations, status updates. Each one takes two to three minutes to type, and the wording drifts between people, which makes the records harder to search later.</p>
+                <p>The task is small. Repeated across a team, every day, it stops being small.</p>
+
+                <h2>What we built</h2>
+                <p>A Chrome extension that watches the story field and suggests matching templates as the technician types. Keyword matching happens in real time; Tab completes the suggestion; arrow keys and Enter move through the list. The technician never leaves the keyboard.</p>
+                <p>Behind it sits an admin portal that issues and manages licences — per technician, per location, per department — with expiry handling, revocation, and reissue separated so a lost key doesn't mean a lost seat. The portal also counts every template insert as it happens, which is what makes the numbers above verifiable rather than claimed.</p>
+
+                <h2>How the return is calculated</h2>
+                <p>The multiple matters less than the method behind it, so here's the method in full:</p>
+                <ul class="case-list">
+                    <li><strong>Usage is a direct count.</strong> The extension logs every template insert to the portal as it happens — no sampling, no self-reporting. The report can be pulled at any time and re-verified independently.</li>
+                    <li><strong>Time saved is valued conservatively.</strong> Each insert is credited at the low end of how long that write-up actually takes to type by hand, not the average and not the best case.</li>
+                    <li><strong>Labour value uses the client's own rate</strong>, not an industry benchmark — so the result reflects their floor rather than a flattering national figure.</li>
+                    <li><strong>Cost is the real invoice</strong>, not list price. Licences issued free of charge still count toward the savings while contributing nothing to what's billed, which pushes the multiple down rather than up.</li>
+                </ul>
+                <p>Every one of those choices was made in the direction that makes the number smaller. The return still lands at roughly five times what the client pays for it.</p>
+
+                <h2>Built to grow sideways</h2>
+                <p>Licences are modelled per technician, per location, and per department from the beginning, with expiry, revocation, and reissue kept as separate operations. Adding a second site is a configuration change rather than a data migration — which is the difference between a tool that fits one office and a tool a business can standardise on.</p>
+
+                <div class="project-tech" style="margin-top:32px;">
+                    <span class="tech-badge">JavaScript</span>
+                    <span class="tech-badge">Chrome APIs</span>
+                    <span class="tech-badge">DOM Manipulation</span>
+                    <span class="tech-badge">Licensing &amp; Expiry</span>
+                    <span class="tech-badge">Usage Analytics</span>
+                </div>
+            </section>
+
+            <section class="cta-section">
+                <div class="cta-box">
+                    <h2>Have a task your team repeats every day?</h2>
+                    <p>That's usually where the cheapest wins are. Tell us what it is and we'll tell you whether it's worth automating.</p>
+                    <div class="cta-buttons" style="justify-content:center;">
+                        <a href="index.html#contact" class="btn btn-primary">Start a Conversation</a>
+                        <a href="work.html" class="btn btn-secondary">See Our Work</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>BLUE STACK LABS</h3>
+                    <p>Building practical software solutions for small businesses and individuals. Focused on quality, clarity, and getting things done.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="plans.html">Web Design Plans</a></li>
+                        <li><a href="services.html">All Services</a></li>
+                        <li><a href="technology.html">Technology</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="work.html">Our Work</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="mailto:info@bluestacklabs.software">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Blue Stack Labs. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="background.js"></script>
+</body>
+</html>

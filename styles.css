@@ -1346,6 +1346,121 @@ footer {
     font-size: 14px;
 }
 
+/* Case study */
+.case-hero {
+    max-width: 860px;
+    padding-bottom: 20px;
+}
+
+.case-hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(34px, 5.5vw, 60px);
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: -2px;
+    margin: 8px 0 24px;
+}
+
+.case-lead {
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--text-dim);
+}
+
+.metric-section {
+    padding: 20px 0 60px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.metric {
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.12), rgba(0, 163, 255, 0.04));
+    border: 1px solid rgba(0, 102, 255, 0.3);
+    border-radius: 20px;
+    padding: 36px 32px;
+}
+
+.metric-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(34px, 4.5vw, 52px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #ffffff, var(--light-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 14px;
+}
+
+.metric-label {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.metric-note {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+.metric-caption {
+    margin-top: 24px;
+    font-size: 15px;
+    color: var(--text-dim);
+    font-style: italic;
+}
+
+.case-body {
+    max-width: 760px;
+    padding-bottom: 80px;
+}
+
+.case-body h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 48px 0 18px;
+}
+
+.case-body p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+}
+
+.case-body strong {
+    color: var(--text-light);
+}
+
+.case-list {
+    margin: 0 0 18px 22px;
+}
+
+.case-list li {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    padding-left: 6px;
+}
+
+.case-list li::marker {
+    color: var(--primary-blue);
+}
+
+@media (max-width: 968px) {
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* 404 */
 .error-section {
     padding: 120px 0 140px;
