@@ -89,6 +89,29 @@ body {
     z-index: 1;
 }
 
+/* Keyboard users can jump straight past the nav. Hidden until focused. */
+.skip-link {
+    position: absolute;
+    left: 16px;
+    top: -60px;
+    z-index: 100;
+    padding: 12px 20px;
+    border-radius: 0 0 10px 10px;
+    background: var(--primary-blue);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+main:focus {
+    outline: none;
+}
+
 /* Navigation */
 nav {
     padding: 30px 0;
@@ -550,10 +573,36 @@ nav {
     box-shadow: 0 20px 60px rgba(0, 102, 255, 0.2);
 }
 
+/* Icons are inline SVG rather than emoji: emoji render differently on every
+   OS, so the site would look different on Windows than on a Mac. Drawn with
+   currentColor so they take their colour from the surrounding text. */
 .service-icon {
-    font-size: 48px;
     display: block;
     margin-bottom: 20px;
+    color: var(--light-blue);
+}
+
+.service-icon svg,
+.feature-icon svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.service-icon svg {
+    width: 44px;
+    height: 44px;
+}
+
+.service-card:hover .service-icon {
+    color: var(--accent-cyan);
+}
+
+.service-icon,
+.feature-icon {
+    transition: color 0.3s ease;
 }
 
 .service-card h3 {
@@ -586,8 +635,12 @@ nav {
 }
 
 .services-teaser .service-icon {
-    font-size: 58px;
     margin-bottom: 26px;
+}
+
+.services-teaser .service-icon svg {
+    width: 52px;
+    height: 52px;
 }
 
 .services-teaser .service-card h3 {
@@ -963,8 +1016,14 @@ nav {
 }
 
 .feature-icon {
-    font-size: 32px;
     flex-shrink: 0;
+    color: var(--light-blue);
+    line-height: 0;
+}
+
+.feature-icon svg {
+    width: 28px;
+    height: 28px;
 }
 
 .feature-item strong {
@@ -1285,6 +1344,39 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-dim);
     font-size: 14px;
+}
+
+/* 404 */
+.error-section {
+    padding: 120px 0 140px;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.error-code {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(72px, 16vw, 140px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -4px;
+    color: rgba(0, 102, 255, 0.22);
+    margin-bottom: 10px;
+}
+
+.error-section h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 22px;
+}
+
+.error-message {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin-bottom: 40px;
 }
 
 /* Smooth Scrolling */

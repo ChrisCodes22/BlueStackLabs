@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#0b0b0b; }
+  .card {
+    width:1200px; height:630px; position:relative; overflow:hidden;
+    background:#050810; color:#e0e7ff;
+    font-family:'Work Sans',sans-serif;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 96px;
+  }
+  .grid {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(0,102,255,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,102,255,0.07) 1px, transparent 1px);
+    background-size:50px 50px;
+  }
+  .orb { position:absolute; border-radius:50%; filter:blur(90px); }
+  .orb-a { width:520px; height:520px; background:#0066FF; opacity:.36; top:-190px; right:-120px; }
+  .orb-b { width:400px; height:400px; background:#06b6d4; opacity:.28; bottom:-180px; left:-110px; }
+  .inner { position:relative; }
+  .logo {
+    font-family:'Orbitron',sans-serif; font-weight:900; font-size:78px; letter-spacing:-2px;
+    background:linear-gradient(135deg,#0066FF,#00A3FF);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:26px;
+  }
+  h1 {
+    font-family:'Orbitron',sans-serif; font-weight:700; font-size:44px;
+    line-height:1.25; letter-spacing:-1px; color:#fff; margin-bottom:30px;
+  }
+  h1 em { font-style:normal;
+    background:linear-gradient(135deg,#0066FF,#00A3FF,#06b6d4);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .meta { display:flex; align-items:center; gap:18px; font-size:23px; color:#94a3b8; }
+  .dot { width:7px; height:7px; border-radius:50%; background:#0066FF; }
+  .rule { position:absolute; left:0; right:0; bottom:0; height:6px;
+          background:linear-gradient(90deg,#0066FF,#00A3FF,#06b6d4); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="grid"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="inner">
+      <div class="logo">BLUE STACK LABS</div>
+      <h1>Turning <em>Ideas</em> Into Working Software</h1>
+      <div class="meta">
+        <span>Custom web apps</span><span class="dot"></span>
+        <span>Automation</span><span class="dot"></span>
+        <span>Browser extensions</span>
+      </div>
+    </div>
+    <div class="rule"></div>
+  </div>
+</body>
+</html>
