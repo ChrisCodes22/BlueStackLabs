@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /tools/
+Disallow: /docs/
 
 Sitemap: https://bluestacklabs.software/sitemap.xml
