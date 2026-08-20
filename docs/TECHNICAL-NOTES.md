@@ -663,3 +663,59 @@ URL, whether or not it's linked from anywhere. That's why `July Recap.pdf` is
 deliberately untracked, and why `robots.txt` disallows `/tools/` and `/docs/`.
 (Note that `robots.txt` is a request to crawlers, not access control — it keeps
 things out of search results, it does not make them private.)
+
+---
+
+## 15. The MarketReady cover, and why "bigger" wasn't the fix
+
+The MarketReady slide now leads with `images/marketready-cover.png` — the branded
+1200×630 banner — instead of the dashboard screenshot.
+
+The first attempt used the 600×600 square logo card, and it rendered small and
+floaty with wide empty gutters. The instinct is to reach for a higher-resolution
+file, but resolution was never the problem, and this is the useful thing to
+internalize: **`object-fit: contain` scales by aspect ratio, not by pixel count.**
+
+`.flip-front img` is a flex child (`flex: 1; min-height: 0`) in a column, so its
+*box* is as wide as the card and as tall as whatever's left under the caption —
+about 658×366 at desktop width, a ratio of 1.80:1. Then:
+
+```css
+object-fit: contain;
+```
+
+`contain` scales the image until it fits *entirely* inside that box, preserving
+its ratio. The limiting dimension wins:
+
+| source | ratio | renders as | result |
+|---|---|---|---|
+| `marketready_card_600.png` | 1.00:1 | 366×366 | ~146px of gutter each side |
+| `marketready_card_1200.png` | 1.00:1 | 366×366 | **identical** — 4× the pixels, same gap |
+| `marketready_banner_1200x630.png` | 1.90:1 | 658×346 | ~10px letterbox, fills the frame |
+
+The 1200×1200 card is four times the data and lands on exactly the same 366×366
+square, because height is the constraint and the ratio didn't move. Only changing
+the *shape* changes the fit — which is why the banner works: at 1.90:1 it's a
+near-match for the box's 1.80:1, so it fills edge to edge with a hairline
+letterbox top and bottom.
+
+Switching to `object-fit: cover` would fill any frame, but by cropping the
+overflow — on the square that meant slicing the left and right off the wordmark.
+The comment above that rule warns about exactly this.
+
+`width="1200" height="630"` stay on the tag on purpose. The browser uses the
+ratio to reserve the right space before the bytes arrive, so the caption
+underneath doesn't jump when a lazy-loaded image finally decodes.
+
+## 16. Why this site has no build credit
+
+Client sites get a `Site created by Blue Stack Labs` line in the footer — passive
+marketing a visitor can follow back. This site deliberately does not.
+
+The reasoning is worth writing down because the two lines look similar but make
+different claims. The copyright line asserts *ownership of the content*. A build
+credit is *attribution for the work*. On a client's site those genuinely differ:
+the client owns the content, Blue Stack built it, and the credit carries real
+information. On bluestacklabs.software they collapse into the same party, so the
+credit says nothing the `© 2026 Blue Stack Labs` line and the entire surrounding
+site don't already say. It was added here briefly and removed for that reason.
