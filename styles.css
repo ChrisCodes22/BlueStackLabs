@@ -817,6 +817,31 @@ nav {
     display: block;
 }
 
+/* Client covers: the mark is a transparent PNG and the client's own ground is
+   painted behind it here, so the colour fills the whole image area, into the
+   card's rounded corners, at any card shape, without cropping the mark.
+   The padding goes because the PNG carries its own margin around the mark. */
+.flip-front img.brand-cover {
+    padding: 0;
+}
+
+/* MarketReady's panel colour, from its own social banner. */
+.brand-cover-marketready {
+    background: #080809;
+}
+
+/* FloralsRomero's .hero background, from her site.css, verbatim. */
+.brand-cover-floralsromero {
+    background:
+        radial-gradient(ellipse 80% 60% at 82% 8%, #F7EBE9 0%, transparent 60%),
+        linear-gradient(160deg, #FAF8F4 0%, #F3EEE4 46%, #E9E0CE 100%);
+}
+
+/* Golden Ridge's cream, from their logo card. */
+.brand-cover-goldenridge {
+    background: #F3EFE4;
+}
+
 .flip-front-meta {
     padding: 22px 30px 26px;
     background: linear-gradient(135deg, rgba(0, 102, 255, 0.10), rgba(0, 163, 255, 0.03));

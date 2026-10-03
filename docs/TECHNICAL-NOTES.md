@@ -719,3 +719,86 @@ the client owns the content, Blue Stack built it, and the credit carries real
 information. On bluestacklabs.software they collapse into the same party, so the
 credit says nothing the `© 2026 Blue Stack Labs` line and the entire surrounding
 site don't already say. It was added here briefly and removed for that reason.
+
+## 17. Adding FloralsRomero and Golden Ridge to the portfolio
+
+Two client sites joined the home-page carousel (`index.html`) and the work page
+(`work.html`). The changes were all markup: two new `<li class="carousel-slide">`
+blocks and two new `.project-showcase` blocks. No JavaScript changed.
+
+**Why the carousel needed no code.** `script.js` never hard-codes how many
+projects there are. It reads them out of the page:
+
+```js
+const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+const dots = slides.map((_, i) => { /* one dot per slide */ });
+index = (next + slides.length) % slides.length;
+```
+
+The dots are built from the slide list, and wraparound uses `slides.length`, so
+a third and fourth slide get dots, arrow navigation and autoplay just by
+existing in the HTML. The principle is to **let the DOM be the source of truth**:
+when content drives behaviour, adding content doesn't mean touching code.
+
+**The covers: client colours, filling the frame.** The first pass reused each
+client's 1200×630 social card as-is. The fit was fine, but the card image has
+`padding: 22px 22px 0`, so each cover sat as a cream rectangle with *square*
+corners inside the card's *rounded* ones, and that mismatch is what looked
+sharp. Two ways to make the colour reach the edges:
+
+- `object-fit: cover` with no padding fills the frame by *cropping*. That works
+  at desktop (~1.8:1), but on a phone the frame gets much taller relative to
+  its width, and cover would slice the ends off "GOLDEN RIDGE".
+- **Separate the mark from its ground.** `tools/make-portfolio-covers.py`
+  writes each mark in its original ink on a *transparent* 1200×630 PNG, and CSS
+  paints the client's ground behind it. An element's `background` fills its
+  whole box regardless of what `object-fit: contain` does with the image, so
+  the colour runs edge to edge at any frame shape, and the card's
+  `overflow: hidden; border-radius: 20px` rounds it. The mark is never cropped;
+  it just scales.
+
+That's the version used. The grounds are copied from the clients' own CSS:
+`.brand-cover-floralsromero` is FloralsRomero's `.hero` gradient verbatim, and
+`.brand-cover-goldenridge` is Golden Ridge's flat cream. Her signature is
+redrawn from the traced vector path in her `index.html` rather than cut out of
+a JPG, so its edges never touched cream and there's no fringe. Golden Ridge's
+transparent logo already ships on their site.
+
+The MarketReady card got the same treatment afterwards. Its banner had the
+identical problem *baked into the image*: a `#080809` panel with its own
+rounded corners and 1px border, so the card showed two sets of corners. Its
+logo has no separate transparent file, so the script lifts it off the banner
+with **colour-to-alpha**. Every anti-aliased edge pixel is a blend,
+`p = a·fg + (1−a)·bg`. With `bg` known, the smallest `a` that keeps `fg` a
+valid colour is how far `p` moved from `bg`, divided by how far it *could* have
+moved in that direction (`(p − bg) / (255 − bg)` per channel, taking the max).
+Solving for `fg` then gives the true logo colour. A plain "is this pixel
+background? then clear it" test can't do this. It either keeps edge pixels
+with dark panel colour mixed in (a fringe) or deletes them (jaggies).
+
+The check that it worked: composite the result back onto `#080809` and
+compare it with the original banner. The largest difference inside the frame
+is 1 level out of 255, which is rounding. The panel's outer 40px, with the
+border and corners, is zeroed out, and `.brand-cover-marketready` paints the
+panel colour behind it.
+
+Along the way there was a detour, where the marks were re-inked light to sit
+on this site's dark background. One lesson from it is worth keeping. The first
+attempt at re-inking Golden Ridge came out blotchy because it scored "black
+ink" with a **saturation ratio**, `(max − min) / max`. That divides by
+brightness, so in near-black pixels a 3-level wobble between channels
+(`8, 6, 5`) reads as ~40% saturated. **Absolute chroma**, `(max − min) / 255`,
+stays near zero there. Ratios amplify noise wherever the denominator is small.
+
+A gotcha from previewing: Python's `http.server` sends `Last-Modified` with no
+`Cache-Control`, so Chrome heuristically cached `styles.css` and kept serving
+the old rules. Netlify's default is `max-age=0, must-revalidate`, so this is
+local only, but it's why a cache-busting `?v=` matters during preview.
+
+**Descriptions were checked against the code, not written from memory.** Every
+claim maps to something real in the client repo: the 7-day lead time is enforced
+in FloralsRomero's `site.js`, `i18n.js` is loaded on all five of its pages, and
+Golden Ridge's quote form fills its hidden `subject` field per submission
+(`New quote request: <name> (<time>)`), which is what makes each request its own
+email thread. Business details such as phone numbers and prices stay off this
+site, because they belong to the client and change without us knowing.
