@@ -1,3 +1,11 @@
+# The build step only regenerates sitemap.xml (tools/build-sitemap.py); the site
+# itself is plain files, published from the repo root as before. If the script
+# ever fails on Netlify it keeps the committed sitemap rather than failing the
+# deploy.
+[build]
+  command = "python3 tools/build-sitemap.py"
+  publish = "."
+
 [[headers]]
   for = "/*"
   [headers.values]

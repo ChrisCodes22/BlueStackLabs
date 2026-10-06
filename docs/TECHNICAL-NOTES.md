@@ -802,3 +802,58 @@ Golden Ridge's quote form fills its hidden `subject` field per submission
 (`New quote request: <name> (<time>)`), which is what makes each request its own
 email thread. Business details such as phone numbers and prices stay off this
 site, because they belong to the client and change without us knowing.
+
+## 18. A sitemap that rebuilds itself on every deploy
+
+`sitemap.xml` used to be hand-written. It listed the right pages, but every
+`<lastmod>` said 2026-08-14 long after the home and work pages had changed, and
+a new page would have stayed invisible to it until someone remembered. Now
+`tools/build-sitemap.py` regenerates it, and Netlify runs it on every push:
+
+```toml
+[build]
+  command = "python3 tools/build-sitemap.py"
+  publish = "."
+```
+
+Until now Netlify had no build step at all; it served the repo as-is. A build
+command runs in Netlify's container after it clones the repo and before it
+publishes, so a file the command writes is what gets served, even though the
+same file is also committed.
+
+**Which pages get listed.** Every `.html` file under the publish root, minus
+four exclusions, each read from the site itself rather than kept in a list:
+`404.html`; anything `robots.txt` disallows (`/tools/`, `/docs/`); pages with a
+`noindex` robots meta; and pages whose `<link rel="canonical">` points at a
+different URL, which are duplicates by their own admission. Because the rules
+live in the pages, adding a page needs no edit here, and neither does hiding one.
+
+**Why dates come from git, not the filesystem.** The obvious source is each
+file's modified time, and on Netlify that is always wrong: a fresh clone stamps
+every file with the moment of the clone, so every page would claim it changed
+on every deploy. Search engines notice when `<lastmod>` is consistently wrong
+and stop trusting it. `git log -1 --format=%cI -- page.html` is the date of the
+last commit that touched that page, which is the real answer.
+
+That needs history, and CI systems often clone *shallowly* (just the latest
+commit) for speed. In a shallow clone every page's "last commit" is the newest
+one, which is the same lie as mtime. So the script checks
+`git rev-parse --is-shallow-repository` and runs `git fetch --unshallow` if it
+has to. This was tested by building from a `--depth 1` clone: it deepened the
+history and produced the right dates. If history still can't be had, it leaves
+`<lastmod>` out rather than guess.
+
+**Failing safe.** On Netlify, an unexpected error in the script prints a
+warning and exits successfully, and the committed `sitemap.xml` ships instead.
+A broken sitemap generator should never be the reason a real change doesn't
+deploy. Locally it raises, so you see the error.
+
+`<priority>` was dropped. Google has said it ignores it, and values that are
+never measured against anything are just noise.
+
+**What the generator exposed.** It lists every HTML file in the repo, and the
+first run in a clean clone included `business-proposition.html`, the private
+client proposal with real figures. It was never in the old sitemap, but it was
+live at a guessable URL all along. Leaving a page out of the sitemap doesn't
+hide it; only keeping it out of the published files does. It has been moved to
+`~/Documents`, the same as `July Recap.pdf`.
